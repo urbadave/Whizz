@@ -31,4 +31,44 @@ public class GameMoveTests
         Assert.AreEqual(model3, sortList[2]);
         Assert.AreEqual(model4, sortList[3]);
     }
+
+    [TestMethod]
+    public void RuledOut_Asignment_Tests()
+    {
+        var model1 = new GameMove();
+        var testData1 = new List<char> { 'A', 'a', 'r', 'X' };
+        var testData2 = new List<char> { 'A', 'a', 'r', 'X', '~', '|', '&', 'm' };
+
+        model1.RuledOut = testData1;
+        Assert.AreEqual(3, model1.RuledOut.Count);
+        Assert.IsTrue(model1.RuledOut.Contains('A'));
+        Assert.IsTrue(model1.RuledOut.Contains('R'));
+        Assert.IsFalse(model1.RuledOut.Contains('r'));
+        Assert.IsTrue(model1.RuledOut.Contains('X'));
+
+        var model2 = new GameMove() { RuledOut = testData1 };
+        Assert.AreEqual(3, model2.RuledOut.Count);
+        Assert.IsTrue(model2.RuledOut.Contains('A'));
+        Assert.IsTrue(model2.RuledOut.Contains('R'));
+        Assert.IsFalse(model2.RuledOut.Contains('r'));
+        Assert.IsTrue(model2.RuledOut.Contains('X'));
+
+        var model3 = new GameMove("e168a3fb-bab7-4317-9136-e8a68cd750c1", 0, testData1, new(), new());
+        Assert.AreEqual(3, model3.RuledOut.Count);
+        Assert.IsTrue(model3.RuledOut.Contains('A'));
+        Assert.IsTrue(model3.RuledOut.Contains('R'));
+        Assert.IsFalse(model3.RuledOut.Contains('r'));
+        Assert.IsTrue(model3.RuledOut.Contains('X'));
+
+        var model4 = new GameMove("e168a3fb-bab7-4317-9136-e8a68cd750c1", 0, new(), new(), new());
+        Assert.AreEqual(0, model4.RuledOut.Count);
+
+        var model5 = new GameMove() { RuledOut = testData2 };
+        Assert.AreEqual(4, model5.RuledOut.Count);
+        Assert.IsTrue(model5.RuledOut.Contains('A'));
+        Assert.IsTrue(model5.RuledOut.Contains('R'));
+        Assert.IsFalse(model5.RuledOut.Contains('r'));
+        Assert.IsTrue(model5.RuledOut.Contains('X'));
+        Assert.IsTrue(model5.RuledOut.Contains('M'));
+    }
 }

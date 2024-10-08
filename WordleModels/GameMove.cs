@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 
 namespace WordleModels;
@@ -20,6 +21,7 @@ public class GameMove : IEquatable<GameMove>, IComparable<GameMove>
         set { SetRuledOut(value); }
     }
 
+    private List<char> _correct;
     [JsonProperty(PropertyName = "correct")]
     public List<char> Correct { get; set; } = new List<char>();
 
@@ -40,16 +42,6 @@ public class GameMove : IEquatable<GameMove>, IComparable<GameMove>
         Incorrect = incorrect;
     }
 
-    private List<char> SetRuledOut(List<char> value)
-    {
-        var allUpper = new List<char>();
-
-        var toPurify = (value == null) ? new List<char>() : value;
-        toPurify.ForEach(c => allUpper.Add(c.ToString().ToUpper()[0]));
-        var uniqueUpper = new HashSet<char>(allUpper);
-
-        return uniqueUpper.ToList();
-    }
 
     public void Merge(GameMove other)
     {
@@ -70,6 +62,96 @@ public class GameMove : IEquatable<GameMove>, IComparable<GameMove>
         result.UnionWith(otherRuledOut);
         return result.ToList();
     }
+
+    private void SetRuledOut(List<char> value)
+    {
+        _ruledOut = MakeUniqueUpperLetters(value);
+    }
+
+    private List<char> MergeCorrect(List<char> correctToAdd)
+    {
+        var originalCorrect = this.Correct;
+        var newCorrect = CleanCorrect(correctToAdd);
+        var mergedCorrect = new List<char>();
+
+        for (var i = 0; i < correctToAdd.Count; i++)
+        {
+            var oc = originalCorrect[i];
+            var nc = newCorrect[i];
+
+            mergedCorrect.Add(oc);
+            if(nc != ' ')
+            {
+                if (mergedCorrect[i] == ' ')
+                {
+                    mergedCorrect[i] = nc;
+                }
+                else if (nc != mergedCorrect[i])
+                {
+                    throw new Exception($"Can't change set letter at {i} from {oc} to {nc}");
+                }
+            }
+        }
+        return mergedCorrect;
+    }
+
+    private void SetCorrect(List<char> value)
+    {
+        var upperList = CleanCorrect(value);
+
+        foreach (var c in upperList)
+        {
+            //can't appear in both ruled out and correct
+            if (RuledOut.Contains(c))
+            {
+                RuledOut.Remove(c);
+            }
+        }
+
+        _correct = upperList;
+    }
+
+    private List<char> CleanCorrect(List<char> correctToClean)
+    {
+        var emptyList = new List<char>() { ' ', ' ', ' ', ' ', ' ' };
+
+        //accept either length 0 or length 5. nothing else
+        List<char> setList;
+        if (correctToClean == null || correctToClean.Count == 0) setList = emptyList;
+        else if (correctToClean.Count == 5) setList = correctToClean;
+        else
+        {
+            throw new ArgumentException($"Correct list cannot be length {correctToClean.Count}");
+        }
+
+        var upperList = new List<char>();
+        foreach (var c in setList)
+        {
+            if (c == ' ' || !char.IsLetter(c))
+            {
+                upperList.Add(c);
+            }
+            else
+            {
+                upperList.Add(char.ToUpper(c));
+            }
+        }
+        return upperList;
+    }
+
+    public List<char> MakeUniqueUpperLetters(List<char> value)
+    {
+        var toPurify = (value == null) ? new List<char>() : value;
+        var onlyLetters = new List<char>();
+        toPurify.ForEach(c => { if (Char.IsLetter(c)) onlyLetters.Add(c); });
+
+        var allUpper = new List<char>();
+        onlyLetters.ForEach(c => allUpper.Add(c.ToString().ToUpper()[0]));
+        var uniqueUpper = new HashSet<char>(allUpper);
+
+        return uniqueUpper.ToList();
+    }
+
 
     public int CompareTo(GameMove? other)
     {
