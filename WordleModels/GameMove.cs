@@ -23,14 +23,26 @@ public class GameMove : IEquatable<GameMove>, IComparable<GameMove>
 
     private List<char> _correct;
     [JsonProperty(PropertyName = "correct")]
-    public List<char> Correct { get; set; } = new List<char>();
+    public List<char> Correct
+    {
+        get { return _correct; }
+        set { SetCorrect(value); }
+    }
 
+    public List<List<char>> _incorrect;
     [JsonProperty(PropertyName = "incorrect")]
-    public List<List<char>> Incorrect { get; set; } = new List<List<char>>();
+    public List<List<char>> Incorrect
+    {
+        get { return _incorrect; }        
+        set { SetIncorrect(value); }
+    }
 
     public GameMove()
     {
         GameId = Guid.NewGuid().ToString();
+        RuledOut = new List<char>();
+        Correct = new List<char>();
+        Incorrect = new List<List<char>>();
     }
 
     public GameMove(string gameId, int moveNumber, List<char> ruledOut, List<char> correct, List<List<char>> incorrect)
@@ -42,7 +54,6 @@ public class GameMove : IEquatable<GameMove>, IComparable<GameMove>
         Incorrect = incorrect;
     }
 
-
     public void Merge(GameMove other)
     {
         if(other == null) return;
@@ -51,8 +62,10 @@ public class GameMove : IEquatable<GameMove>, IComparable<GameMove>
         RuledOut = MergeRuledOut(other.RuledOut);
 
         //update Correct array
+        Correct = MergeCorrect(other.Correct);
 
         //update the Incorrect array
+        Incorrect = MergeIncorrect(other.Incorrect);
     }
 
     private List<char> MergeRuledOut(List<char> ruledOutToAdd)
@@ -82,14 +95,7 @@ public class GameMove : IEquatable<GameMove>, IComparable<GameMove>
             mergedCorrect.Add(oc);
             if(nc != ' ')
             {
-                if (mergedCorrect[i] == ' ')
-                {
-                    mergedCorrect[i] = nc;
-                }
-                else if (nc != mergedCorrect[i])
-                {
-                    throw new Exception($"Can't change set letter at {i} from {oc} to {nc}");
-                }
+                mergedCorrect[i] = nc;
             }
         }
         return mergedCorrect;
@@ -98,6 +104,7 @@ public class GameMove : IEquatable<GameMove>, IComparable<GameMove>
     private void SetCorrect(List<char> value)
     {
         var upperList = CleanCorrect(value);
+        if (upperList.Count != 5) upperList = new List<char> { ' ', ' ', ' ', ' ', ' ' };
 
         foreach (var c in upperList)
         {
@@ -117,12 +124,10 @@ public class GameMove : IEquatable<GameMove>, IComparable<GameMove>
 
         //accept either length 0 or length 5. nothing else
         List<char> setList;
-        if (correctToClean == null || correctToClean.Count == 0) setList = emptyList;
-        else if (correctToClean.Count == 5) setList = correctToClean;
-        else
-        {
-            throw new ArgumentException($"Correct list cannot be length {correctToClean.Count}");
-        }
+        if (correctToClean == null || correctToClean.Count != 5)
+            setList = emptyList;
+        else 
+            setList = correctToClean;
 
         var upperList = new List<char>();
         foreach (var c in setList)
@@ -139,7 +144,53 @@ public class GameMove : IEquatable<GameMove>, IComparable<GameMove>
         return upperList;
     }
 
-    public List<char> MakeUniqueUpperLetters(List<char> value)
+    private List<List<char>> MergeIncorrect(List<List<char>> incorrectToAdd)
+    {
+        var cleanToAdd = CleanIncorrect(incorrectToAdd);
+        var merged = new List<List<char>>();
+        for (var i = 0; i < 5; i++)
+        {
+            var positionHash = new HashSet<char>(Incorrect[i]);
+            positionHash.UnionWith(cleanToAdd[i]);
+        }
+        return incorrectToAdd;
+    }
+
+    private void SetIncorrect(List<List<char>> value)
+    {
+        var toAssign = CleanIncorrect(value);
+
+        for(var i = 0; i < 5; i++)
+        {
+            toAssign[i].ForEach(c => { if (RuledOut.Contains(c)) RuledOut.Remove(c); });
+        }
+
+        _incorrect = toAssign;
+    }
+
+    private List<List<char>> CleanIncorrect(List<List<char>> value)
+    {
+        var cleaned = new List<List<char>>();
+
+        if (value != null)
+        {
+            for (var i = 0; i < 5; i++)
+            {
+                if (value.Count > i)
+                {
+                    var cleanAdd = MakeUniqueUpperLetters(value[i]);
+                    cleaned.Add(cleanAdd);
+                }
+                else
+                {
+                    cleaned.Add(new List<char>());
+                }
+            }
+        }
+        return cleaned;
+    }
+
+    private List<char> MakeUniqueUpperLetters(List<char> value)
     {
         var toPurify = (value == null) ? new List<char>() : value;
         var onlyLetters = new List<char>();

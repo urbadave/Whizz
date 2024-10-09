@@ -6,7 +6,7 @@ namespace TestWhizz.WordleModelTests;
 public class GameMoveTests
 {
     [TestMethod]
-    public void DefaultConstructor()
+    public void DefaultConstructorAndEquatable_Works()
     {
         var model1 = new GameMove();
         var model2 = new GameMove();
@@ -14,10 +14,17 @@ public class GameMoveTests
         Assert.AreNotEqual(model1, model2);
         Assert.AreEqual(0, model1.MoveNumber);
         Assert.AreEqual(0, model2.MoveNumber);
+        Assert.AreEqual(0, model1.RuledOut.Count);
+        Assert.AreEqual(5, model1.Correct.Count);
+        Assert.AreEqual(5, model1.Incorrect.Count);
+
+        var model3 = new GameMove("f68e81a4-a0df-424c-9621-a84156be228b", 0, new(), new(), new());
+        var model4 = new GameMove("f68e81a4-a0df-424c-9621-a84156be228b", 0, new(), new(), new());
+        Assert.AreEqual(model3, model4);
     }
 
     [TestMethod]
-    public void ModelSorting()
+    public void RuledOut_UpperCaseAndSorted()
     {
         var model1 = new GameMove("e168a3fb-bab7-4317-9136-e8a68cd750c1", 0, new(), new(), new());
         var model2 = new GameMove("e168a3fb-bab7-4317-9136-e8a68cd750c1", 1, new(), new(), new());
@@ -33,7 +40,7 @@ public class GameMoveTests
     }
 
     [TestMethod]
-    public void RuledOut_Asignment_Tests()
+    public void RuledOutAsignment_UpperCaseLettersOnlySorted()
     {
         var model1 = new GameMove();
         var testData1 = new List<char> { 'A', 'a', 'r', 'X' };
@@ -70,5 +77,27 @@ public class GameMoveTests
         Assert.IsFalse(model5.RuledOut.Contains('r'));
         Assert.IsTrue(model5.RuledOut.Contains('X'));
         Assert.IsTrue(model5.RuledOut.Contains('M'));
+    }
+
+    [TestMethod]
+    public void CorrectRemovesRuledOut()
+    {
+        var ruledOut1 = new List<char> { 'S', 'A', 'E' };
+        var correct1 = new List<char> { 'S', ' ', ' ', ' ', ' ', };
+
+        var model1 = new GameMove("e168a3fb-bab7-4317-9136-e8a68cd750c1", 0, new(), new(), new());
+        Assert.AreEqual(0, model1.RuledOut.Count);
+        Assert.AreEqual(5, model1.Correct.Count);
+        Assert.AreEqual(' ', model1.Correct[0]);
+
+        model1.RuledOut = ruledOut1;
+        Assert.AreEqual(3, model1.RuledOut.Count);
+        Assert.AreEqual(5, model1.Correct.Count);
+        Assert.AreEqual(' ', model1.Correct[0]);
+
+        model1.Correct = correct1;
+        Assert.AreEqual(2, model1.RuledOut.Count);
+        Assert.AreEqual(5, model1.Correct.Count);
+        Assert.AreEqual('S', model1.Correct[0]);
     }
 }
