@@ -150,10 +150,11 @@ public class GameMove : IEquatable<GameMove>, IComparable<GameMove>
         var merged = new List<List<char>>();
         for (var i = 0; i < 5; i++)
         {
-            var positionHash = new HashSet<char>(Incorrect[i]);
+            HashSet<char> positionHash = new HashSet<char>(Incorrect[i]);
             positionHash.UnionWith(cleanToAdd[i]);
+            merged.Add(positionHash.ToList());
         }
-        return incorrectToAdd;
+        return merged;
     }
 
     private void SetIncorrect(List<List<char>> value)

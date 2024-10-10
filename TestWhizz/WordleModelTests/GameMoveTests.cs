@@ -100,4 +100,67 @@ public class GameMoveTests
         Assert.AreEqual(5, model1.Correct.Count);
         Assert.AreEqual('S', model1.Correct[0]);
     }
+
+    [TestMethod]
+    public void MergeTest_Normal()
+    {
+        var ruledOut1 = new List<char> { 'S', 'N' };
+        var correct1 = new List<char> { ' ', 'A', ' ', ' ', ' ' };
+        var incorrect1 = new List<List<char>> { new List<char>(), new List<char>(), new List<char>(), new List<char>{'E'}, new List<char> {'R'} };
+        var model1 = new GameMove() { RuledOut = ruledOut1, Correct = correct1, Incorrect = incorrect1 };
+        var gameId = model1.GameId;
+
+        var ruledOut2 = new List<char> { 'L', 'Y' };
+        var correct2 = new List<char> { ' ', 'A', 'R', ' ', ' ' };
+        var incorrect2 = new List<List<char>> { new List<char> { 'E' }, new List<char>(), new List<char>(), new List<char>(), new List<char>() };
+        var model2 = new GameMove(gameId, 1, ruledOut2, correct2, incorrect2 );
+
+        var ruledOut3 = new List<char> { 'B', 'G' };
+        var correct3 = new List<char> { ' ', 'A', 'R', ' ', 'E' };
+        var incorrect3 = new List<List<char>> { new List<char>(), new List<char>(), new List<char>(), new List<char>(), new List<char>() };
+        var model3 = new GameMove(gameId, 2, ruledOut3, correct3, incorrect3);
+
+        var ruledOut4 = new List<char> { 'F' };
+        var correct4 = new List<char> { ' ', 'A', 'R', ' ', 'E' };
+        var incorrect4 = new List<List<char>> { new List<char>(), new List<char>(), new List<char>(), new List<char> { 'C' }, new List<char>() };
+        var model4 = new GameMove(gameId, 3, ruledOut4, correct4, incorrect4);
+
+        var gameMove = model1;
+        Assert.AreEqual(gameId, gameMove.GameId);
+        Assert.AreEqual(2, gameMove.RuledOut.Count);
+        Assert.AreEqual(' ', gameMove.Correct[0]);
+        Assert.AreEqual('A', gameMove.Correct[1]);
+        Assert.AreEqual('E', gameMove.Incorrect[3][0]);
+        Assert.AreEqual('R', gameMove.Incorrect[4][0]);
+
+        gameMove.Merge(model2);
+        Assert.AreEqual(4, gameMove.RuledOut.Count);
+        Assert.AreEqual(' ', gameMove.Correct[0]);
+        Assert.AreEqual('A', gameMove.Correct[1]);
+        Assert.AreEqual('R', gameMove.Correct[2]);
+        Assert.AreEqual('E', gameMove.Incorrect[3][0]);
+        Assert.AreEqual('R', gameMove.Incorrect[4][0]);
+        Assert.AreEqual('E', gameMove.Incorrect[0][0]);
+
+        gameMove.Merge(model3);
+        Assert.AreEqual(6, gameMove.RuledOut.Count);
+        Assert.AreEqual(' ', gameMove.Correct[0]);
+        Assert.AreEqual('A', gameMove.Correct[1]);
+        Assert.AreEqual('R', gameMove.Correct[2]);
+        Assert.AreEqual('E', gameMove.Correct[4]);
+        Assert.AreEqual('E', gameMove.Incorrect[3][0]);
+        Assert.AreEqual('R', gameMove.Incorrect[4][0]);
+        Assert.AreEqual('E', gameMove.Incorrect[0][0]);
+
+        gameMove.Merge(model4);
+        Assert.AreEqual(7, gameMove.RuledOut.Count);
+        Assert.AreEqual(' ', gameMove.Correct[0]);
+        Assert.AreEqual('A', gameMove.Correct[1]);
+        Assert.AreEqual('R', gameMove.Correct[2]);
+        Assert.AreEqual('E', gameMove.Correct[4]);
+        Assert.AreEqual('E', gameMove.Incorrect[3][0]);
+        Assert.AreEqual('R', gameMove.Incorrect[4][0]);
+        Assert.AreEqual('E', gameMove.Incorrect[0][0]);
+        Assert.AreEqual('C', gameMove.Incorrect[3][1]);
+    }
 }
