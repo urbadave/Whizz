@@ -29,7 +29,7 @@ public class GameMove : IEquatable<GameMove>, IComparable<GameMove>
         set { SetCorrect(value); }
     }
 
-    public List<List<char>> _incorrect;
+    private List<List<char>> _incorrect;
     [JsonProperty(PropertyName = "incorrect")]
     public List<List<char>> Incorrect
     {
@@ -40,6 +40,14 @@ public class GameMove : IEquatable<GameMove>, IComparable<GameMove>
     public GameMove()
     {
         GameId = Guid.NewGuid().ToString();
+        _ruledOut = new List<char>();
+        _correct = new List<char>();
+        _incorrect = new List<List<char>>();
+    }
+
+    public GameMove(string gameId)
+    {
+        GameId = gameId;
         RuledOut = new List<char>();
         Correct = new List<char>();
         Incorrect = new List<List<char>>();
@@ -145,7 +153,9 @@ public class GameMove : IEquatable<GameMove>, IComparable<GameMove>
 
     private void SetRuledOut(List<char> value)
     {
-        _ruledOut = MakeUniqueUpperLetters(value);
+        var clean = MakeUniqueUpperLetters(value);
+        clean.Sort();
+        _ruledOut = clean;
     }
 
     private List<char> MergeCorrect(List<char> correctToAdd)
@@ -219,7 +229,9 @@ public class GameMove : IEquatable<GameMove>, IComparable<GameMove>
         {
             HashSet<char> positionHash = new HashSet<char>(Incorrect[i]);
             positionHash.UnionWith(cleanToAdd[i]);
-            merged.Add(positionHash.ToList());
+            List<char> positionList = positionHash.ToList();
+            positionList.Sort();
+            merged.Add(positionList);
         }
         return merged;
     }

@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using WordleModels;
 
 namespace TestWhizz.WordleModelTests;
@@ -8,8 +9,8 @@ public class GameMoveTests
     [TestMethod]
     public void DefaultConstructorAndEquatable_Works()
     {
-        var model1 = new GameMove();
-        var model2 = new GameMove();
+        var model1 = new GameMove(Guid.NewGuid().ToString());
+        var model2 = new GameMove(Guid.NewGuid().ToString());
 
         Assert.AreNotEqual(model1, model2);
         Assert.AreEqual(0, model1.MoveNumber);
@@ -63,7 +64,7 @@ public class GameMoveTests
     [TestMethod]
     public void RuledOutAsignment_UpperCaseLettersOnlySorted()
     {
-        var model1 = new GameMove();
+        var model1 = new GameMove(Guid.NewGuid().ToString());
         var testData1 = new List<char> { 'A', 'a', 'r', 'X' };
         var testData2 = new List<char> { 'A', 'a', 'r', 'X', '~', '|', '&', 'm' };
 
@@ -74,7 +75,7 @@ public class GameMoveTests
         Assert.IsFalse(model1.RuledOut.Contains('r'));
         Assert.IsTrue(model1.RuledOut.Contains('X'));
 
-        var model2 = new GameMove() { RuledOut = testData1 };
+        var model2 = new GameMove(Guid.NewGuid().ToString()) { RuledOut = testData1 };
         Assert.AreEqual(3, model2.RuledOut.Count);
         Assert.IsTrue(model2.RuledOut.Contains('A'));
         Assert.IsTrue(model2.RuledOut.Contains('R'));
@@ -91,7 +92,7 @@ public class GameMoveTests
         var model4 = new GameMove("e168a3fb-bab7-4317-9136-e8a68cd750c1", 0, new(), new(), new());
         Assert.AreEqual(0, model4.RuledOut.Count);
 
-        var model5 = new GameMove() { RuledOut = testData2 };
+        var model5 = new GameMove(Guid.NewGuid().ToString()) { RuledOut = testData2 };
         Assert.AreEqual(4, model5.RuledOut.Count);
         Assert.IsTrue(model5.RuledOut.Contains('A'));
         Assert.IsTrue(model5.RuledOut.Contains('R'));
@@ -123,28 +124,22 @@ public class GameMoveTests
     }
 
     [TestMethod]
+    public void DeserializeTest()
+    {
+        var model1 = JsonConvert.DeserializeObject<GameMove>(GameMoveTestData.model1Json);
+    }
+
+    [TestMethod]
     public void MergeTest_Normal()
     {
-        var ruledOut1 = new List<char> { 'S', 'N' };
-        var correct1 = new List<char> { ' ', 'A', ' ', ' ', ' ' };
-        var incorrect1 = new List<List<char>> { new List<char>(), new List<char>(), new List<char>(), new List<char>{'E'}, new List<char> {'R'} };
-        var model1 = new GameMove() { RuledOut = ruledOut1, Correct = correct1, Incorrect = incorrect1 };
+        var model1 = JsonConvert.DeserializeObject<GameMove>(GameMoveTestData.model1Json);
         var gameId = model1.GameId;
 
-        var ruledOut2 = new List<char> { 'L', 'Y' };
-        var correct2 = new List<char> { ' ', 'A', 'R', ' ', ' ' };
-        var incorrect2 = new List<List<char>> { new List<char> { 'E' }, new List<char>(), new List<char>(), new List<char>(), new List<char>() };
-        var model2 = new GameMove(gameId, 1, ruledOut2, correct2, incorrect2 );
+        var model2 = JsonConvert.DeserializeObject<GameMove>(GameMoveTestData.model2Json);
 
-        var ruledOut3 = new List<char> { 'B', 'G' };
-        var correct3 = new List<char> { ' ', 'A', 'R', ' ', 'E' };
-        var incorrect3 = new List<List<char>> { new List<char>(), new List<char>(), new List<char>(), new List<char>(), new List<char>() };
-        var model3 = new GameMove(gameId, 2, ruledOut3, correct3, incorrect3);
+        var model3 = JsonConvert.DeserializeObject<GameMove>(GameMoveTestData.model3Json);
 
-        var ruledOut4 = new List<char> { 'F' };
-        var correct4 = new List<char> { ' ', 'A', 'R', ' ', 'E' };
-        var incorrect4 = new List<List<char>> { new List<char>(), new List<char>(), new List<char>(), new List<char> { 'C' }, new List<char>() };
-        var model4 = new GameMove(gameId, 3, ruledOut4, correct4, incorrect4);
+        var model4 = JsonConvert.DeserializeObject<GameMove>(GameMoveTestData.model4Json);
 
         var gameMove = model1;
         Assert.AreEqual(gameId, gameMove.GameId);
@@ -179,9 +174,9 @@ public class GameMoveTests
         Assert.AreEqual('A', gameMove.Correct[1]);
         Assert.AreEqual('R', gameMove.Correct[2]);
         Assert.AreEqual('E', gameMove.Correct[4]);
-        Assert.AreEqual('E', gameMove.Incorrect[3][0]);
+        Assert.AreEqual('C', gameMove.Incorrect[3][0]);
         Assert.AreEqual('R', gameMove.Incorrect[4][0]);
         Assert.AreEqual('E', gameMove.Incorrect[0][0]);
-        Assert.AreEqual('C', gameMove.Incorrect[3][1]);
+        Assert.AreEqual('E', gameMove.Incorrect[3][1]);
     }
 }
