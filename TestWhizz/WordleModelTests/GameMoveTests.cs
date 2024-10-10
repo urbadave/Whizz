@@ -123,25 +123,17 @@ public class GameMoveTests
         Assert.AreEqual('S', model1.Correct[0]);
     }
 
-    [TestMethod]
-    public void DeserializeTest()
-    {
-        var model1 = JsonConvert.DeserializeObject<GameMove>(GameMoveTestData.model1Json);
-    }
 
     [TestMethod]
     public void MergeTest_Normal()
     {
-        var model1 = JsonConvert.DeserializeObject<GameMove>(GameMoveTestData.model1Json);
-        var gameId = model1.GameId;
+        var move1 = JsonConvert.DeserializeObject<GameMove>(GameMoveTestData.model1Json);
+        var move2 = JsonConvert.DeserializeObject<GameMove>(GameMoveTestData.model2Json);
+        var move3 = JsonConvert.DeserializeObject<GameMove>(GameMoveTestData.model3Json);
+        var move4 = JsonConvert.DeserializeObject<GameMove>(GameMoveTestData.model4Json);
 
-        var model2 = JsonConvert.DeserializeObject<GameMove>(GameMoveTestData.model2Json);
-
-        var model3 = JsonConvert.DeserializeObject<GameMove>(GameMoveTestData.model3Json);
-
-        var model4 = JsonConvert.DeserializeObject<GameMove>(GameMoveTestData.model4Json);
-
-        var gameMove = model1;
+        var gameId = move1.GameId;
+        var gameMove = move1;
         Assert.AreEqual(gameId, gameMove.GameId);
         Assert.AreEqual(2, gameMove.RuledOut.Count);
         Assert.AreEqual(' ', gameMove.Correct[0]);
@@ -149,7 +141,7 @@ public class GameMoveTests
         Assert.AreEqual('E', gameMove.Incorrect[3][0]);
         Assert.AreEqual('R', gameMove.Incorrect[4][0]);
 
-        gameMove.Merge(model2);
+        gameMove.Merge(move2);
         Assert.AreEqual(4, gameMove.RuledOut.Count);
         Assert.AreEqual(' ', gameMove.Correct[0]);
         Assert.AreEqual('A', gameMove.Correct[1]);
@@ -158,7 +150,7 @@ public class GameMoveTests
         Assert.AreEqual('R', gameMove.Incorrect[4][0]);
         Assert.AreEqual('E', gameMove.Incorrect[0][0]);
 
-        gameMove.Merge(model3);
+        gameMove.Merge(move3);
         Assert.AreEqual(6, gameMove.RuledOut.Count);
         Assert.AreEqual(' ', gameMove.Correct[0]);
         Assert.AreEqual('A', gameMove.Correct[1]);
@@ -168,7 +160,7 @@ public class GameMoveTests
         Assert.AreEqual('R', gameMove.Incorrect[4][0]);
         Assert.AreEqual('E', gameMove.Incorrect[0][0]);
 
-        gameMove.Merge(model4);
+        gameMove.Merge(move4);
         Assert.AreEqual(7, gameMove.RuledOut.Count);
         Assert.AreEqual(' ', gameMove.Correct[0]);
         Assert.AreEqual('A', gameMove.Correct[1]);
