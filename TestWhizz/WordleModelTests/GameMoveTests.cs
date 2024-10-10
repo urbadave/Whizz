@@ -24,7 +24,7 @@ public class GameMoveTests
     }
 
     [TestMethod]
-    public void RuledOut_UpperCaseAndSorted()
+    public void EqualityTests()
     {
         var model1 = new GameMove("e168a3fb-bab7-4317-9136-e8a68cd750c1", 0, new(), new(), new());
         var model2 = new GameMove("e168a3fb-bab7-4317-9136-e8a68cd750c1", 1, new(), new(), new());
@@ -37,6 +37,27 @@ public class GameMoveTests
         Assert.AreEqual(model2, sortList[1]);
         Assert.AreEqual(model3, sortList[2]);
         Assert.AreEqual(model4, sortList[3]);
+    }
+
+    [TestMethod]
+    public void CanMergeTests()
+    {
+        var model1 = new GameMove("e168a3fb-bab7-4317-9136-e8a68cd750c1", 0, new(), new(), new());
+        var model2 = new GameMove("e168a3fb-bab7-4317-9136-e8a68cd750c1", 1, new(), new(), new());
+        var model3 = new GameMove("f68e81a4-a0df-424c-9621-a84156be228b", 0, new(), new(), new());
+        var model4 = new GameMove("f68e81a4-a0df-424c-9621-a84156be228b", 1, new(), new(), new());
+
+        var response1 = model1.CanMerge(model2);
+        Assert.IsTrue(response1.response);
+
+        var response2 = model1.CanMerge(model3);
+        Assert.IsFalse(response2.response);
+
+        var response3 = model2.CanMerge(model1);
+        Assert.IsFalse(response3.response);
+
+        var response4 = model4.CanMerge(null);
+        Assert.IsFalse(response4.response);
     }
 
     [TestMethod]

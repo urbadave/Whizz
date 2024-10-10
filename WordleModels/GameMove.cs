@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using RecordTypes;
 using System.Diagnostics;
 
 namespace WordleModels;
@@ -58,15 +58,82 @@ public class GameMove : IEquatable<GameMove>, IComparable<GameMove>
     {
         if(other == null) return;
 
-        //add to the ruled out array
-        RuledOut = MergeRuledOut(other.RuledOut);
+        //validation rules:
+        var canMerge = CanMerge(other);
 
-        //update Correct array
-        Correct = MergeCorrect(other.Correct);
+        if (canMerge.response == true)
+        {
+            //add to the ruled out array
+            RuledOut = MergeRuledOut(other.RuledOut);
 
-        //update the Incorrect array
-        Incorrect = MergeIncorrect(other.Incorrect);
+            //update Correct array
+            Correct = MergeCorrect(other.Correct);
+
+            //update the Incorrect array
+            Incorrect = MergeIncorrect(other.Incorrect);
+
+            //update game move
+            MoveNumber = other.MoveNumber;
+        }
+        else
+        {
+            throw new ArgumentException(canMerge.message);
+        }
     }
+
+    public BoolResponse CanMerge(GameMove? other)
+    {
+        if (other == null)
+            return new BoolResponse(false, "Cannot merge with null");
+
+        if (other.GameId != GameId)
+            return new BoolResponse(false, "GameIds do not match");
+
+        if ((MoveNumber + 1) != other.MoveNumber)
+            return new BoolResponse(false, $"Cannot merge move {other.MoveNumber} into move {MoveNumber}");
+
+        return new BoolResponse(true, string.Empty);
+    }
+
+    public string ToJson()
+    {
+        var retVal = JsonConvert.SerializeObject(this);
+
+        if (retVal == null)
+            throw new Exception("Could not serialize into JSON");
+
+        return retVal;
+    }
+
+    public int CompareTo(GameMove? other)
+    {
+        if (other == null) return 1;
+
+        if (!this.GameId.Equals(other.GameId))
+            return this.GameId.CompareTo(other.GameId);
+
+        if (!this.MoveNumber.Equals(other.MoveNumber))
+            return this.MoveNumber.CompareTo(other.MoveNumber);
+
+        return 0;
+    }
+
+    public bool Equals(GameMove? other)
+    {
+        if (other == null) return false;
+
+        if (this.GameId.Equals(other.GameId) && this.MoveNumber.Equals(other.MoveNumber))
+            return true;
+
+        return false;
+    }
+
+    public override string ToString()
+    {
+        return $"{GameId} [{MoveNumber}]";
+    }
+
+
 
     private List<char> MergeRuledOut(List<char> ruledOutToAdd)
     {
@@ -204,32 +271,4 @@ public class GameMove : IEquatable<GameMove>, IComparable<GameMove>
         return uniqueUpper.ToList();
     }
 
-
-    public int CompareTo(GameMove? other)
-    {
-        if(other == null) return 1;
-
-        if(! this.GameId.Equals(other.GameId))
-            return this.GameId.CompareTo(other.GameId);
-
-        if(! this.MoveNumber.Equals(other.MoveNumber))
-            return this.MoveNumber.CompareTo(other.MoveNumber);
-
-        return 0;
-    }
-
-    public bool Equals(GameMove? other)
-    {
-        if(other == null) return false;
-
-        if (this.GameId.Equals(other.GameId) && this.MoveNumber.Equals(other.MoveNumber))
-            return true;
-
-        return false;
-    }
-
-    public override string ToString()
-    {
-        return $"{GameId} [{MoveNumber}]";
-    }
 }

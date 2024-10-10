@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35004.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whizz", "Whizz\Whizz.csproj", "{52AA6F68-1501-4375-89A8-FD72F62C2C73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Whizz", "Whizz\Whizz.csproj", "{52AA6F68-1501-4375-89A8-FD72F62C2C73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordleModels", "WordleModels\WordleModels.csproj", "{3579E465-46F2-4C3C-AF69-A42D38FF9067}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WordleModels", "WordleModels\WordleModels.csproj", "{3579E465-46F2-4C3C-AF69-A42D38FF9067}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWhizz", "TestWhizz\TestWhizz.csproj", "{C370FE8F-A617-41A1-BFFE-AC407737EA7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestWhizz", "TestWhizz\TestWhizz.csproj", "{C370FE8F-A617-41A1-BFFE-AC407737EA7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecordTypes", "RecordTypes\RecordTypes.csproj", "{0E2C7C1A-9B4B-4ED0-AE9B-0DFFBDC5FBC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{C370FE8F-A617-41A1-BFFE-AC407737EA7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C370FE8F-A617-41A1-BFFE-AC407737EA7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C370FE8F-A617-41A1-BFFE-AC407737EA7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E2C7C1A-9B4B-4ED0-AE9B-0DFFBDC5FBC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E2C7C1A-9B4B-4ED0-AE9B-0DFFBDC5FBC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E2C7C1A-9B4B-4ED0-AE9B-0DFFBDC5FBC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E2C7C1A-9B4B-4ED0-AE9B-0DFFBDC5FBC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
