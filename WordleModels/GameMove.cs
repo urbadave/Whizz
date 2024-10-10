@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using RecordTypes;
+using UsefulRecords;
 using System.Diagnostics;
 
 namespace WordleModels;
@@ -89,18 +89,18 @@ public class GameMove : IEquatable<GameMove>, IComparable<GameMove>
         }
     }
 
-    public BoolResponse CanMerge(GameMove? other)
+    public UsefulRecords.BoolResponse CanMerge(GameMove? other)
     {
         if (other == null)
-            return new BoolResponse(false, "Cannot merge with null");
+            return new UsefulRecords.BoolResponse(false, "Cannot merge with null");
 
         if (other.GameId != GameId)
-            return new BoolResponse(false, "GameIds do not match");
+            return new UsefulRecords.BoolResponse(false, "GameIds do not match");
 
         if ((MoveNumber + 1) != other.MoveNumber)
-            return new BoolResponse(false, $"Cannot merge move {other.MoveNumber} into move {MoveNumber}");
+            return new UsefulRecords.BoolResponse(false, $"Cannot merge move {other.MoveNumber} into move {MoveNumber}");
 
-        return new BoolResponse(true, string.Empty);
+        return new UsefulRecords.BoolResponse(true, string.Empty);
     }
 
     public string ToJson()
