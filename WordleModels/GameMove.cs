@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using UsefulRecords;
 using System.Diagnostics;
 
 namespace WordleModels;
