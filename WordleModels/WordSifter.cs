@@ -1,10 +1,12 @@
-﻿using UsefulRecords;
+﻿using System.Text;
+using UsefulRecords;
 
 namespace WordleModels;
 public class WordSifter
 {
     public List<string> CommonWords { get; set; } = new List<string>();
     public List<string> CandidateWords { get; set; } = new List<string>();
+    public List<LetterScore> LetterScores { get; set; } = new List<LetterScore>();
 
     public void LoadWords(List<string> words)
     {
@@ -32,6 +34,8 @@ public class WordSifter
         possible = FilterByMisplacedLetters(gameMove.Incorrect, possible);
 
         CandidateWords = possible;
+
+        ScoreLetters(gameMove, possible);
     }
 
     public List<string> GetWordsWithCorrectLetters(List<char> correct, List<string> words)
@@ -134,5 +138,64 @@ public class WordSifter
         }
     }
 
+    public void ScoreLetters(GameMove gameMove, List<string> words)
+    {
+        //get all ruledOut, correct and incorrect letters
+        var ignore = new HashSet<char>();
+        var scoreList = new List<LetterScore>();
 
+        if(gameMove != null)
+        {
+            foreach(var c in gameMove.RuledOut)
+            {
+                ignore.Add(c);
+            }
+            foreach(var c in gameMove.Correct)
+            {
+                if(c != ' ')
+                    ignore.Add(c);
+            }
+            foreach(var posList in gameMove.Incorrect)
+            {
+                foreach(var c in posList)
+                {
+                    ignore.Add(c);
+                }
+            }
+
+            foreach(var word in words)
+            {
+                foreach(var c in word)
+                {
+                    if (!ignore.Contains(c))
+                    {
+                        var index = scoreList.FindIndex(ls => ls.Equals(c));
+                        if(index == -1)
+                        {
+                            scoreList.Add(new LetterScore(c, 1));
+                        }
+                        else
+                        {
+                            scoreList[index].Inc();
+                        }
+                    }
+                }
+            }
+
+            scoreList.Sort();
+            LetterScores = scoreList;
+        }
+    }
+
+    public string ScoredLetters()
+    {
+        var builder = new StringBuilder();
+
+        foreach(var ls in LetterScores)
+        {
+            builder.Append(ls.Letter);
+        }
+
+        return builder.ToString();
+    }
 }

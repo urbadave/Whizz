@@ -63,6 +63,7 @@ public class WordSifterTests
         var result = sifter.CandidateWords;
         Assert.IsNotNull(result);
         Assert.AreEqual(171, result.Count);
+        var thing = sifter.ScoredLetters();
 
         sifter = new WordSifter();
         sifter.LoadWords(WordSifterData.fiveLetterWords);
@@ -74,6 +75,7 @@ public class WordSifterTests
         result = sifter.CandidateWords;
         Assert.IsNotNull(result);
         Assert.AreEqual(17, result.Count);
+        thing = sifter.ScoredLetters();
 
         sifter = new WordSifter();
         sifter.LoadWords(WordSifterData.fiveLetterWords);
@@ -87,6 +89,7 @@ public class WordSifterTests
         result = sifter.CandidateWords;
         Assert.IsNotNull(result);
         Assert.AreEqual(3, result.Count);
+        thing = sifter.ScoredLetters();
 
         sifter = new WordSifter();
         sifter.LoadWords(WordSifterData.fiveLetterWords);
@@ -102,5 +105,6 @@ public class WordSifterTests
         result = sifter.CandidateWords;
         Assert.IsNotNull(result);
         Assert.AreEqual(2, result.Count);
+        thing = sifter.ScoredLetters();
     }
 }
