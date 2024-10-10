@@ -33,17 +33,20 @@ public class WordSifter
             possible = GetNotRuledOutWords(gameMove.RuledOut, possible);
             possible = GetWordsWithCorrectLetters(gameMove.Correct, possible);
         }
+
+        possible = FilterByMisplacedLetters(gameMove.Incorrect, possible);
+
         CandidateWords = possible;
     }
 
     public List<string> GetWordsWithCorrectLetters(List<char> correct, List<string> words)
     {
-        var placedLetters = new List<CorrectLetter>();
+        var placedLetters = new List<LetterPosition>();
         for(var i = 0; i < 5; i++)
         {
             if (correct[i] != ' ')
             {
-                placedLetters.Add(new CorrectLetter(correct[i], i));
+                placedLetters.Add(new LetterPosition(correct[i], i));
             }
         }
 
@@ -68,7 +71,44 @@ public class WordSifter
         }
         else
         {
-            return CommonWords;
+            return words;
+        }
+    }
+
+    public List<string> FilterByMisplacedLetters(List<List<char>> incorrect, List<string> words)
+    {
+        var misplacedLetters = new List<LetterPosition>();
+        for (var i = 0; i < 5; i++)
+        {
+            var positionList = incorrect[i];
+            foreach (var c in positionList)
+            {
+                misplacedLetters.Add(new LetterPosition(c, i));
+            }
+        }
+
+        if (misplacedLetters.Any())
+        {
+            var possible = new List<string>();
+            foreach (var word in words)
+            {
+                var impossible = false;
+                foreach (var ml in misplacedLetters)
+                {
+                    if (word[ml.position] == ml.letter)
+                    {
+                        impossible = true;
+                        break;
+                    }
+                }
+                if(!impossible)
+                    possible.Add(word);
+            }
+            return possible;
+        }
+        else
+        {
+            return words;
         }
     }
 
@@ -95,7 +135,9 @@ public class WordSifter
         }
         else
         {
-            return CommonWords;
+            return words;
         }
     }
+
+
 }

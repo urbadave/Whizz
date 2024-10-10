@@ -2,4 +2,4 @@
 
 public record BoolResponse(bool response, string message);
 
-public record CorrectLetter(char letter, int position);
+public record LetterPosition(char letter, int position);

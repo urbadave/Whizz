@@ -62,7 +62,7 @@ public class WordSifterTests
         sifter.ApplyGameMove(gameMove);
         var result = sifter.CandidateWords;
         Assert.IsNotNull(result);
-        Assert.AreEqual(284, result.Count);
+        Assert.AreEqual(171, result.Count);
 
         sifter = new WordSifter();
         sifter.LoadWords(WordSifterData.fiveLetterWords);
@@ -73,7 +73,7 @@ public class WordSifterTests
         sifter.ApplyGameMove(gameMove);
         result = sifter.CandidateWords;
         Assert.IsNotNull(result);
-        Assert.AreEqual(29, result.Count);
+        Assert.AreEqual(17, result.Count);
 
         sifter = new WordSifter();
         sifter.LoadWords(WordSifterData.fiveLetterWords);
