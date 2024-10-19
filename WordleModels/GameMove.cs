@@ -39,9 +39,9 @@ public class GameMove : IEquatable<GameMove>, IComparable<GameMove>
     public GameMove()
     {
         GameId = Guid.NewGuid().ToString();
-        _ruledOut = new List<char>();
-        _correct = new List<char>();
-        _incorrect = new List<List<char>>();
+        RuledOut = new List<char>();
+        Correct = new List<char>();
+        Incorrect = new List<List<char>>();
     }
 
     public GameMove(string gameId)
