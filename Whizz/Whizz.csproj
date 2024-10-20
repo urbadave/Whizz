@@ -7,4 +7,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WordleModels\WordleModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="FiveLetterWords.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
