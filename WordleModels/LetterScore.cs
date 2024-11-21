@@ -44,4 +44,9 @@ public class LetterScore: IEquatable<char>, IEquatable<LetterScore>, IComparable
     {
         return Letter.Equals(other);
     }
+
+    public override string ToString()
+    {
+        return $"{Letter}{Score}";
+    }
 }

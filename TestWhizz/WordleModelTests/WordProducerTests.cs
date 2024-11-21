@@ -13,7 +13,7 @@ namespace TestWhizz.WordleModelTests
         [TestMethod]
         public void AllRuledOut()
         {
-            var producer = new MoveProducer();
+            var producer = new FivePlaceMoveProducer();
 
             var move = producer.MakeMove("=S/A/N/E/R/");
 
@@ -24,7 +24,7 @@ namespace TestWhizz.WordleModelTests
         [TestMethod]
         public void TwoSet()
         {
-            var producer = new MoveProducer();
+            var producer = new FivePlaceMoveProducer();
             var sifter = new WordSifter();
             sifter.LoadWords(WordSifterData.fiveLetterWords);
 

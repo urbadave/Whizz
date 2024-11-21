@@ -88,18 +88,28 @@ public class WordSifter
 
         if (misplacedLetters.Any())
         {
-            var possible = new List<string>();
+            List<string> possible = new();
+
             foreach (var word in words)
             {
+                //word must contain ALL misplaced letters
                 var impossible = false;
-                foreach (var ml in misplacedLetters)
+                foreach(var pl in misplacedLetters)
                 {
-                    if (word[ml.position] == ml.letter)
+                    if(!word.Contains(pl.letter))
+                        impossible = true;
+                }
+                if (impossible) continue;
+
+                //now make sure word doesn't contain any letters in the wrong place.
+                foreach(var pl in misplacedLetters)
+                {
+                    if (word[pl.position] == pl.letter)
                     {
                         impossible = true;
-                        break;
                     }
                 }
+
                 if(!impossible)
                     possible.Add(word);
             }
@@ -189,13 +199,22 @@ public class WordSifter
 
     public string ScoredLetters()
     {
-        var builder = new StringBuilder();
+        //var builder = new StringBuilder();
 
+        //foreach(var ls in LetterScores)
+        //{
+        //    builder.Append(ls.Letter);
+        //}
+
+        //return builder.ToString();
+        List<string> outList = new();
         foreach(var ls in LetterScores)
         {
-            builder.Append(ls.Letter);
+            outList.Add(ls.ToString());
         }
-
-        return builder.ToString();
+        if (outList.Any())
+            return string.Join(", ", outList);
+        else
+            return string.Empty;
     }
 }

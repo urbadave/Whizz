@@ -7,13 +7,12 @@ internal class Program
 {
     public static WordSifter Sifter { get; private set; }
     public static GameMove Move { get; private set; } = null;
-    public static MoveProducer Producer { get; private set; }
+    public static IMoveProducer Producer { get; private set; }
 
     static void Main(string[] args)
-    {
-        
+    {        
         Console.WriteLine("Wordle Whizz");
-        var CommonWords = new List<string>();
+        var commonWords = new List<string>();
         string filePath = string.Empty;
         try
         {
@@ -30,10 +29,10 @@ internal class Program
                 using (var reader = new StreamReader(filePath))
                 {
                     var text = reader.ReadToEnd();
-                    CommonWords = text.Split("\r\n").ToList();
+                    commonWords = text.Split("\r\n").ToList();
                 }
             }
-            Console.WriteLine($"Loaded file with {CommonWords.Count} common 5 letter words");
+            Console.WriteLine($"Loaded file with {commonWords.Count} common 5 letter words");
 
         }
         catch (Exception ex)
@@ -42,34 +41,57 @@ internal class Program
 
         }
 
-        Sifter = new WordSifter();
-        Sifter.LoadWords(CommonWords);
-        Producer = new MoveProducer();
+        InitializeGame(commonWords);
 
         while (true)
         {
-            Console.WriteLine();
-            Console.WriteLine("Input guess results. Start with =, then each letter followed by result.");
-            Console.WriteLine("/ means ruled out, ! means in right position, ? mean in wrong position");
+            Producer.Instructions();
 
             var userInput = Console.ReadLine();
-            
-            if (DoWhatTheyAsk(userInput) == null) return;
+
+            if (string.IsNullOrEmpty(userInput))
+                return;
+
+            if (userInput == "RESET")
+            {
+                InitializeGame(commonWords);
+                Console.WriteLine("Resetting");
+                Console.WriteLine();
+            }
+            else
+            {
+                var validCheck = Producer.IsInputValid(userInput);
+                if (validCheck.response == true)
+                {
+                    if (DoWhatTheyAsk(userInput) == null)
+                        return;
+                }
+                else
+                {
+                    Console.WriteLine(validCheck.message);
+                }
+            }
         }
+    }
+
+    public static void InitializeGame(List<string> commonWords)
+    {
+        Move = null;
+        Sifter = new WordSifter();
+        Sifter.LoadWords(commonWords);
+        //Producer = new FivePlaceMoveProducer();
+        Producer = new CategoryMoveProducer();
     }
 
     public static string? DoWhatTheyAsk(string input)
     {
         if (input == null || input == string.Empty) return null;
 
-        if (input[0] == '=')
-        {
-            //create a Move with the string.
-            Console.WriteLine($"Look for words from move {input}");
-            return DoAGameMove(input);
-        }
+        //create a Move with the string.
+        Console.WriteLine($"Look for words from move {input}");
+        return DoAGameMove(input);
 
-        return "What?";
+        //return "What?";
     }
 
     public static string? DoAGameMove(string input)
@@ -92,6 +114,11 @@ internal class Program
         {
             Console.WriteLine(line);
         }
+
+        Console.WriteLine();
+        Console.WriteLine(Sifter.ScoredLetters());
+        Console.WriteLine();
+
         return $"Move {Move.MoveNumber}";
     }
     
