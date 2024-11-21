@@ -36,6 +36,8 @@ public class WordSifter
         CandidateWords = possible;
 
         ScoreLetters(gameMove, possible);
+
+        var scoredWords = ScoreWords();
     }
 
     public List<string> GetWordsWithCorrectLetters(List<char> correct, List<string> words)
@@ -199,13 +201,6 @@ public class WordSifter
 
     public string ScoredLetters()
     {
-        //var builder = new StringBuilder();
-
-        //foreach(var ls in LetterScores)
-        //{
-        //    builder.Append(ls.Letter);
-        //}
-
         //return builder.ToString();
         List<string> outList = new();
         foreach(var ls in LetterScores)
@@ -216,5 +211,19 @@ public class WordSifter
             return string.Join(", ", outList);
         else
             return string.Empty;
+    }
+
+    public List<WordScore> ScoreWords()
+    {
+        List<WordScore> outList = new();
+
+        foreach(var word in CandidateWords)
+        {
+            var toAdd = new WordScore(word);
+            toAdd.SetScore(LetterScores);
+            outList.Add(toAdd);
+        }
+        outList.Sort();
+        return outList;
     }
 }
