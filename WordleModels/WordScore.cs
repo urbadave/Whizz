@@ -36,12 +36,12 @@ public class WordScore: IComparable<WordScore>
 
     public int CompareTo(WordScore? other)
     {
-        if(other == null) return 1;
+        if(other == null) return -11;
         if(Score == other.Score)
         {
-            return Word.CompareTo(other.Word);
+            return other.Word.CompareTo(Word);
         }
-        return Score.CompareTo(other.Score);
+        return other.Score.CompareTo(Score);
     }
 
     public override string ToString()

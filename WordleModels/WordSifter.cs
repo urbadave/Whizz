@@ -7,6 +7,7 @@ public class WordSifter
     public List<string> CommonWords { get; set; } = new List<string>();
     public List<string> CandidateWords { get; set; } = new List<string>();
     public List<LetterScore> LetterScores { get; set; } = new List<LetterScore>();
+    public List<WordScore> BestGuesses { get; set; } = new List<WordScore>();
 
     public void LoadWords(List<string> words)
     {
@@ -38,6 +39,13 @@ public class WordSifter
         ScoreLetters(gameMove, possible);
 
         var scoredWords = ScoreWords();
+        BestGuesses.Clear();
+        var count = 0;
+        while(count < scoredWords.Count && count < 5)
+        {
+            BestGuesses.Add(scoredWords[count]);
+            count++;
+        }
     }
 
     public List<string> GetWordsWithCorrectLetters(List<char> correct, List<string> words)

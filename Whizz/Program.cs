@@ -117,6 +117,7 @@ internal class Program
 
         Console.WriteLine();
         Console.WriteLine(Sifter.ScoredLetters());
+        Console.WriteLine(string.Join(", ", Sifter.BestGuesses));
         Console.WriteLine();
 
         return $"Move {Move.MoveNumber}";
