@@ -8,6 +8,7 @@ public class WordSifter
     public List<string> CandidateWords { get; set; } = new List<string>();
     public List<LetterScore> LetterScores { get; set; } = new List<LetterScore>();
     public List<WordScore> BestGuesses { get; set; } = new List<WordScore>();
+    public List<WordScore> RuleOuts { get; set; } = new List<WordScore>();
 
     public void LoadWords(List<string> words)
     {
@@ -40,12 +41,16 @@ public class WordSifter
 
         var scoredWords = ScoreWords();
         BestGuesses.Clear();
-        var count = 0;
-        while(count < scoredWords.Count && count < 5)
-        {
-            BestGuesses.Add(scoredWords[count]);
-            count++;
-        }
+        BestGuesses.AddRange(scoredWords.Take(5));
+        //var count = 0;
+        //while(count < scoredWords.Count && count < 5)
+        //{
+        //    BestGuesses.Add(scoredWords[count]);
+        //    count++;
+        //}
+        var ruleOutGuess = ScoreAllWords();
+        RuleOuts.Clear();
+        RuleOuts.AddRange(ruleOutGuess.Take(5));
     }
 
     public List<string> GetWordsWithCorrectLetters(List<char> correct, List<string> words)
@@ -233,5 +238,20 @@ public class WordSifter
         }
         outList.Sort();
         return outList;
+    }
+
+    public List<WordScore> ScoreAllWords()
+    {
+        List<WordScore> outList = new();
+
+        foreach (var word in CommonWords)
+        {
+            var toAdd = new WordScore(word);
+            toAdd.SetScore(LetterScores);
+            outList.Add(toAdd);
+        }
+        outList.Sort();
+        var retVal = outList.Take(10).ToList();
+        return retVal;
     }
 }
