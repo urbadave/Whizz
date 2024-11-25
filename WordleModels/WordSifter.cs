@@ -37,20 +37,23 @@ public class WordSifter
 
         CandidateWords = possible;
 
-        ScoreLetters(gameMove, possible);
+        if (CandidateWords.Count == 1)
+        {
+            BestGuesses.Clear();
+            RuleOuts.Clear();
+        }
+        else
+        {
+            ScoreLetters(gameMove, possible);
 
-        var scoredWords = ScoreWords();
-        BestGuesses.Clear();
-        BestGuesses.AddRange(scoredWords.Take(5));
-        //var count = 0;
-        //while(count < scoredWords.Count && count < 5)
-        //{
-        //    BestGuesses.Add(scoredWords[count]);
-        //    count++;
-        //}
-        var ruleOutGuess = ScoreAllWords();
-        RuleOuts.Clear();
-        RuleOuts.AddRange(ruleOutGuess.Take(5));
+            var scoredWords = ScoreWords();
+            BestGuesses.Clear();
+            BestGuesses.AddRange(scoredWords.Take(5));
+
+            var ruleOutGuess = ScoreAllWords();
+            RuleOuts.Clear();
+            RuleOuts.AddRange(ruleOutGuess.Take(5));
+        }
     }
 
     public List<string> GetWordsWithCorrectLetters(List<char> correct, List<string> words)

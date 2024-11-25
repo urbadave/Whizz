@@ -109,17 +109,20 @@ internal class Program
         var wordList = Sifter.CandidateWords;
         var outputList = FormatWordOutput(wordList);
 
+        Console.Write("");
         Console.WriteLine("Possible words");
         foreach (var line in outputList)
         {
             Console.WriteLine(line);
         }
-
-        Console.WriteLine();
-        Console.WriteLine(Sifter.ScoredLetters());
-        Console.WriteLine(string.Join(", ", Sifter.BestGuesses));
-        Console.WriteLine(string.Join(", ", Sifter.RuleOuts));
-        Console.WriteLine();
+        if (wordList.Count > 1)
+        {
+            Console.WriteLine();
+            Console.WriteLine(Sifter.ScoredLetters());
+            Console.WriteLine(string.Join(", ", Sifter.BestGuesses));
+            Console.WriteLine(string.Join(", ", Sifter.RuleOuts));
+            Console.WriteLine();
+        }
 
         return $"Move {Move.MoveNumber}";
     }
