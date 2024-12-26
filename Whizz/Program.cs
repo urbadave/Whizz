@@ -20,7 +20,9 @@ internal class Program
             IConfigurationRoot config = new ConfigurationBuilder()
                 .AddUserSecrets<Program>()
                 .Build();
-            var thing = config["KeyNobodyKnows"];
+            var nobody = config["XX:KeyNobodyKnows"];
+            var access = config["S3:IngressTicket"];
+            var secret = config["S3:CovertTicket"];
 
             var dir = AppDomain.CurrentDomain.BaseDirectory;
             if (!string.IsNullOrEmpty(dir))
