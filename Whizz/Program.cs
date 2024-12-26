@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Microsoft.Extensions.Configuration;
+using System.Text;
 using WordleModels;
 
 namespace Whizz;
@@ -16,6 +17,11 @@ internal class Program
         string filePath = string.Empty;
         try
         {
+            IConfigurationRoot config = new ConfigurationBuilder()
+                .AddUserSecrets<Program>()
+                .Build();
+            var thing = config["KeyNobodyKnows"];
+
             var dir = AppDomain.CurrentDomain.BaseDirectory;
             if (!string.IsNullOrEmpty(dir))
             {
