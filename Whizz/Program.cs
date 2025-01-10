@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Microsoft.Extensions.Configuration;
+using System.Text;
 using WordleModels;
 
 namespace Whizz;
@@ -16,6 +17,13 @@ internal class Program
         string filePath = string.Empty;
         try
         {
+            IConfigurationRoot config = new ConfigurationBuilder()
+                .AddUserSecrets<Program>()
+                .Build();
+            var nobody = config["XX:KeyNobodyKnows"];
+            var access = config["S3:IngressTicket"];
+            var secret = config["S3:CovertTicket"];
+
             var dir = AppDomain.CurrentDomain.BaseDirectory;
             if (!string.IsNullOrEmpty(dir))
             {
