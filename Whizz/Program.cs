@@ -19,7 +19,7 @@ internal class Program
             var dir = AppDomain.CurrentDomain.BaseDirectory;
             if (!string.IsNullOrEmpty(dir))
             {
-                filePath = Path.Combine(dir, "FiveLetterWords.txt");
+                filePath = Path.Combine(dir, "FiveLetterWordsAll.txt");
             }
             Console.WriteLine($"Word file path is {filePath}");
 
@@ -29,7 +29,10 @@ internal class Program
                 using (var reader = new StreamReader(filePath))
                 {
                     var text = reader.ReadToEnd();
-                    commonWords = text.Split("\r\n").ToList();
+                    if(text.Contains("\r\n"))
+                        commonWords = text.Split("\r\n").ToList();
+                    else
+                        commonWords = text.Split("\n").ToList();
                 }
             }
             Console.WriteLine($"Loaded file with {commonWords.Count} common 5 letter words");
