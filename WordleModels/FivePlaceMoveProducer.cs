@@ -14,18 +14,39 @@ namespace WordleModels
 
         public GameMove MakeMove(string textInput)
         {
-            GameMove move = null;
-            if (GameId == string.Empty)
+            //split on space. turn into array of FivePlaceInputLetters
+            var inputList = textInput.Split(' ');
+
+            var fpiList = inputList.Select(i => new FivePlaceInputLetter(i)).ToList();
+
+            GameMove move = GetMove();
+
+            //expect the fpiList to contain exactly 5 letters
+            for (int i = 0; i < 5; i++)
             {
-                move = new GameMove();
-                GameId = move.GameId;
-                MoveNumber = move.MoveNumber;
+                var fpi = fpiList[i];
+                switch (fpi.State)
+                {
+                    case 0:
+                        move.RuledOut.Add(fpi.Letter);
+                        break;
+                    case 1:
+                        move.Incorrect[i].Add(fpi.Letter);
+                        break;
+                    case 2:
+                        move.Correct[i] = fpi.Letter;
+                        break;
+                    default:
+                        break;
+                }
             }
-            else
-            {
-                MoveNumber++;
-                move = new GameMove(GameId) { MoveNumber = MoveNumber };
-            }
+
+            return move;
+        }
+
+        public GameMove MakeMove2(string textInput)
+        {
+            GameMove move = GetMove();
 
             textInput = textInput.Replace("=", "");
             var place = 0;
@@ -73,6 +94,23 @@ namespace WordleModels
             var check = textInput.Replace("=", "");
             
             return new BoolResponse(true, string.Empty);
+        }
+
+        private GameMove GetMove()
+        {
+            GameMove move = null;
+            if (GameId == string.Empty)
+            {
+                move = new GameMove();
+                GameId = move.GameId;
+                MoveNumber = move.MoveNumber;
+            }
+            else
+            {
+                MoveNumber++;
+                move = new GameMove(GameId) { MoveNumber = MoveNumber };
+            }
+            return move;
         }
     }
 }

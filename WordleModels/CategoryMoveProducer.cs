@@ -11,7 +11,7 @@ public class CategoryMoveProducer : IMoveProducer
     public string GameId { get; set; } = string.Empty;
     public int MoveNumber { get; set; } = 0;
 
-    public GameMove MakeMove(string textInput)
+    public GameMove MakeMove2(string textInput)
     {
         GameMove move = null;
         if (GameId == string.Empty)

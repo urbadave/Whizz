@@ -107,7 +107,7 @@ internal class Program
 
     public static string? DoAGameMove(string input)
     {
-        var newMove = Producer.MakeMove(input);
+        var newMove = Producer.MakeMove2(input);
         if (Move == null)
         {
             Move = newMove;
