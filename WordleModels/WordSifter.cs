@@ -193,13 +193,13 @@ public class WordSifter
 
             foreach(var word in words)
             {
-                List<char> uniqueLetters = new();
+                HashSet<char> seen = new();
                 foreach(var c in word)
                 {
                     if (!ignore.Contains(c))
                     {
                         var index = scoreList.FindIndex(ls => ls.Equals(c));
-                        if (!uniqueLetters.Contains(c))
+                        if (!seen.Contains(c))
                         {
                             if (index == -1)
                             {
@@ -210,6 +210,7 @@ public class WordSifter
                                 scoreList[index].Inc();
                             }
                         }
+                        seen.Add(c);
                     }
                 }
             }
