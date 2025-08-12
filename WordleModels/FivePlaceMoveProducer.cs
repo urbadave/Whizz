@@ -28,7 +28,11 @@ namespace WordleModels
                 switch (fpi.State)
                 {
                     case 0:
-                        move.RuledOut.Add(fpi.Letter);
+                        //if there is another input with the same letter with a higher number, then this becomes an status 1 (incorrect)
+                        if (ChangeToIncorrectPlacement(fpi, i, fpiList))
+                            move.Incorrect[i].Add(fpi.Letter);
+                        else
+                            move.RuledOut.Add(fpi.Letter);
                         break;
                     case 1:
                         move.Incorrect[i].Add(fpi.Letter);
@@ -42,6 +46,19 @@ namespace WordleModels
             }
 
             return move;
+        }
+
+        public bool ChangeToIncorrectPlacement(FivePlaceInputLetter fpi, int index, List<FivePlaceInputLetter> fpiList)
+        {
+            var change = false;
+            for(int i = 0; i < 5; i++)
+            {
+                if (i == index) continue;
+                var toCheck = fpiList[i];
+                if (toCheck.Letter == fpi.Letter && toCheck.State > fpi.State)
+                    change = true;
+            }
+            return change;
         }
 
         public GameMove MakeMove2(string textInput)

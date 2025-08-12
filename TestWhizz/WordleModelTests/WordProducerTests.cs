@@ -45,6 +45,44 @@ namespace TestWhizz.WordleModelTests
         }
 
         [TestMethod]
+        public void TestFivePlaceGofer()
+        {
+            var producer = new FivePlaceMoveProducer();
+            GameMove mergedMove = null;
+            var input = "A0 R1 O1 S0 E1";
+            var move = producer.MakeMove(input);
+            Assert.IsNotNull(move);
+            Assert.AreEqual(2, move.RuledOut.Count);
+            var thing = JsonConvert.SerializeObject(move);
+            mergedMove = move;
+            var mergedThing = JsonConvert.SerializeObject(mergedMove);
+
+            input = "B0 U0 N0 D0 T0";
+            move = producer.MakeMove(input);
+            thing = JsonConvert.SerializeObject(move);
+            mergedMove.Merge(move);
+            mergedThing = JsonConvert.SerializeObject(mergedMove);
+
+            input = "C0 L0 U0 M0 P0";
+            move = producer.MakeMove(input);
+            thing = JsonConvert.SerializeObject(move);
+            mergedMove.Merge(move);
+            mergedThing = JsonConvert.SerializeObject(mergedMove);
+
+            input = "W0 A0 K0 F1 S0";
+            move = producer.MakeMove(input);
+            thing = JsonConvert.SerializeObject(move);
+            mergedMove.Merge(move);
+            mergedThing = JsonConvert.SerializeObject(mergedMove);
+
+            input = "O1 F0 F2 E2 R2";
+            move = producer.MakeMove(input);
+            thing = JsonConvert.SerializeObject(move);
+            mergedMove.Merge(move);
+            mergedThing = JsonConvert.SerializeObject(mergedMove);
+        }
+
+        [TestMethod]
         public void AllRuledOut()
         {
             var producer = new FivePlaceMoveProducer();

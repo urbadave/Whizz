@@ -34,4 +34,12 @@ internal static class GameMoveTestData
     ""correct"": ["" "", ""A"", ""R"", "" "", ""E""],
     ""incorrect"": [[], [], [], [""C""], []]
     }";
+
+    public static string modelGoferJson = @"{
+    ""gameId"": ""0b1750e3-f187-4be5-97d2-804a267b78d2"",
+    ""moveNumber"": 4,
+    ""ruledOut"": [""A"", ""B"", ""C"", ""D"", ""K"", ""L"", ""M"", ""N"", ""P"", ""S"", ""T"", ""U"", ""W""],
+    ""correct"": ["" "", "" "", ""F"", ""E"", ""R""],
+    ""incorrect"": [[""O""], [""F"", ""R""], [""O""], [""F""], [""E""]]
+    }";
 }

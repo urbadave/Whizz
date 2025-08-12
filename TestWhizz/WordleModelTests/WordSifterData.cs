@@ -1466,6 +1466,7 @@ internal static class WordSifterData
 "GOATS",
 "GODLY",
 "GOERS",
+"GOFER",
 "GOING",
 "GOLDS",
 "GOLEM",
