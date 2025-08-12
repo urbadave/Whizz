@@ -193,18 +193,22 @@ public class WordSifter
 
             foreach(var word in words)
             {
+                List<char> uniqueLetters = new();
                 foreach(var c in word)
                 {
                     if (!ignore.Contains(c))
                     {
                         var index = scoreList.FindIndex(ls => ls.Equals(c));
-                        if(index == -1)
+                        if (!uniqueLetters.Contains(c))
                         {
-                            scoreList.Add(new LetterScore(c, 1));
-                        }
-                        else
-                        {
-                            scoreList[index].Inc();
+                            if (index == -1)
+                            {
+                                scoreList.Add(new LetterScore(c, 1));
+                            }
+                            else
+                            {
+                                scoreList[index].Inc();
+                            }
                         }
                     }
                 }
