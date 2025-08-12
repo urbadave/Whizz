@@ -90,8 +90,8 @@ internal class Program
         Move = null;
         Sifter = new WordSifter();
         Sifter.LoadWords(commonWords);
-        //Producer = new FivePlaceMoveProducer();
-        Producer = new CategoryMoveProducer();
+        Producer = new FivePlaceMoveProducer();
+        //Producer = new CategoryMoveProducer();
     }
 
     public static string? DoWhatTheyAsk(string input)
@@ -107,7 +107,7 @@ internal class Program
 
     public static string? DoAGameMove(string input)
     {
-        var newMove = Producer.MakeMove2(input);
+        var newMove = Producer.MakeMove(input);
         if (Move == null)
         {
             Move = newMove;

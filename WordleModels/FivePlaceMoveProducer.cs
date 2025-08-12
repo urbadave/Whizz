@@ -9,6 +9,8 @@ namespace WordleModels
 {
     public class FivePlaceMoveProducer : IMoveProducer
     {
+        private string CapLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ-";
+        private string States = "012";
         public string GameId { get; set; } = string.Empty;
         public int MoveNumber { get; set; } = 0;
 
@@ -25,6 +27,9 @@ namespace WordleModels
             for (int i = 0; i < 5; i++)
             {
                 var fpi = fpiList[i];
+
+                if (fpi.Letter == '-') continue;
+
                 switch (fpi.State)
                 {
                     case 0:
@@ -94,22 +99,45 @@ namespace WordleModels
         public void Instructions()
         {
             Console.WriteLine();
-            Console.WriteLine("Input guess results. Start with =, then each letter followed by result.");
-            Console.WriteLine("/ means ruled out, ! means in right position, ? mean in wrong position");
+            Console.WriteLine("Input the five letters and their type from Wordle");
+            Console.WriteLine("0 means ruled out, 1 means in wrong position, 2 mean in correct position");
         }
 
         public BoolResponse IsInputValid(string textInput)
         {
+            textInput = textInput.Trim();
+
             if(string.IsNullOrWhiteSpace(textInput))
             {
                 return new BoolResponse(false, "Empty text is not valid");
             }
-            if (textInput[0] != '=')
+
+            textInput = textInput.ToUpper();
+
+            var example = "A0 R0 O0 S0 E0";
+            if (textInput.Length != example.Length)
             {
-                return new BoolResponse(false, "Must begin with '='");
+                return new BoolResponse(false, $"Input should look like this:{example}");
             }
-            var check = textInput.Replace("=", "");
-            
+
+            //position 2,5,8 and 11 are all spaces
+            if (textInput[2] != ' ' || textInput[5] != ' ' || textInput[8] != ' ' || textInput[11] != ' ')
+            {
+                return new BoolResponse(false, $"Input should look like this:{example}");
+            }
+
+            //position 0,3,6,9 and 12 are all letters
+            if (!CapLetters.Contains(textInput[0]) || !CapLetters.Contains(textInput[3]) || !CapLetters.Contains(textInput[6]) || !CapLetters.Contains(textInput[9]) || !CapLetters.Contains(textInput[12]))
+            {
+                return new BoolResponse(false, $"Input should look like this:{example}");
+            }
+
+            //position 1,4,7,10 and 13 are all 0, 1 or 2
+            if (!States.Contains(textInput[1]) || !States.Contains(textInput[4]) || !States.Contains(textInput[7]) || !States.Contains(textInput[10]) || !States.Contains(textInput[13]))
+            {
+                return new BoolResponse(false, $"Input should look like this:{example}");
+            }
+
             return new BoolResponse(true, string.Empty);
         }
 

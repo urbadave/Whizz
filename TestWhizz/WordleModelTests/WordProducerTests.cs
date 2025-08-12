@@ -12,6 +12,31 @@ namespace TestWhizz.WordleModelTests
     public class WordProducerTests
     {
         [TestMethod]
+        public void TestFivePlaceSetClue()
+        {
+            var producer = new FivePlaceMoveProducer();
+            GameMove mergedMove = null;
+            var input = "-0 O2 -0 -0 S2";
+            var move = producer.MakeMove(input);
+            var thing = JsonConvert.SerializeObject(move);
+
+            Assert.AreEqual('O', move.Correct[1]);
+            Assert.AreEqual('S', move.Correct[4]);
+        }
+
+        [TestMethod]
+        public void TestFivePlaceThreeRuledOut()
+        {
+            var producer = new FivePlaceMoveProducer();
+            GameMove mergedMove = null;
+            var input = "R0 T0 I0 -0 -0";
+            var move = producer.MakeMove(input);
+            var thing = JsonConvert.SerializeObject(move);
+
+            Assert.AreEqual(3, move.RuledOut.Count);
+        }
+
+        [TestMethod]
         public void TestFivePlaceSlims()
         {
             var producer = new FivePlaceMoveProducer();
