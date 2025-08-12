@@ -66,40 +66,10 @@ namespace WordleModels
             return change;
         }
 
-        public GameMove MakeMove2(string textInput)
-        {
-            GameMove move = GetMove();
-
-            textInput = textInput.Replace("=", "");
-            var place = 0;
-            for (int i = 0; i < 10; i++)
-            {
-                var str = textInput.Substring(i, 2);
-                i++;
-
-                if (str[1] == '/')
-                {
-                    move.RuledOut.Add(str[0]);
-                }
-                else if (str[1] == '!')
-                {
-                    move.Correct[place] = str[0];
-                }
-                else if (str[1] == '?')
-                {
-                    move.Incorrect[place].Add(str[0]);
-                }
-
-                place++;
-            }
-
-            return move;
-        }
-
         public void Instructions()
         {
             Console.WriteLine();
-            Console.WriteLine("Input the five letters and their type from Wordle");
+            Console.WriteLine("Input the five letters and their type from Wordle. Use -0 to indicate empty wordle boxes.");
             Console.WriteLine("0 means ruled out, 1 means in wrong position, 2 mean in correct position");
         }
 
