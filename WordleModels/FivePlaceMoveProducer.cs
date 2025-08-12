@@ -33,7 +33,7 @@ namespace WordleModels
                 switch (fpi.State)
                 {
                     case 0:
-                        //if there is another input with the same letter with a higher number, then this becomes an status 1 (incorrect)
+                        //if there is another input with the same letter with a higher number, then this becomes an status 1 (incorrect place)
                         if (ChangeToIncorrectPlacement(fpi, i, fpiList))
                             move.Incorrect[i].Add(fpi.Letter);
                         else
